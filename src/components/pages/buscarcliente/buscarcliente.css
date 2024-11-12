@@ -1,0 +1,74 @@
+.h2 {
+  padding: 20px;
+  text-align: center;
+}
+
+/* Contenedor principal del buscador */
+.search-container {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  gap: 15px;
+}
+
+/* Estilo del input de búsqueda */
+.search-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Estilo del botón de búsqueda */
+.search-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilo del contenedor de resultados */
+.results-container {
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* Estilo de la lista de resultados */
+.results-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Estilo de cada elemento de resultado */
+.result-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  font-size: 20px;
+}
+
+.result-item strong {
+  color: #333;
+}
+
+/* Estilo para el mensaje de "no resultados" */
+.no-results {
+  color: #666;
+  font-size: 14px;
+  text-align: center;
+}

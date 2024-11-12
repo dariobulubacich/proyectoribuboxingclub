@@ -1,0 +1,32 @@
+.container {
+  color: rgb(17, 17, 17);
+  text-align: center;
+  padding: 30px;
+  font-size: 35px;
+}
+
+.navegacion {
+  margin-top: 80px;
+}
+
+.navegacion ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0px;
+  font-size: 25px;
+}
+
+.navegacion li {
+  margin: 0 20px;
+  cursor: pointer;
+}
+
+.navegacion ul li a {
+  text-decoration: none;
+  color: black;
+}
+
+.navegacion ul li a:hover {
+  color: #007bff;
+}
