@@ -18,7 +18,7 @@
 
 /* Estilo del input de búsqueda */
 .search-input {
-  width: 100%;
+  width: 30%;
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
@@ -27,7 +27,7 @@
 }
 
 /* Estilo del botón de búsqueda */
-.search-button {
+.button {
   padding: 10px 20px;
   font-size: 16px;
   color: #fff;
@@ -38,8 +38,12 @@
   transition: background-color 0.3s ease;
 }
 
-.search-button:hover {
+.button:hover {
   background-color: #0056b3;
+}
+
+.div-button {
+  padding: 15px;
 }
 
 /* Estilo del contenedor de resultados */

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import "./agregarcliente.css";
+import Swal from "sweetalert2";
 
 function AgregarCliente() {
   const [dni, setDni] = useState("");
@@ -25,7 +26,12 @@ function AgregarCliente() {
         mesPago,
         fechaPago,
       });
-      alert("Cliente agregado exitosamente");
+      Swal.fire({
+        title: "Cliente agregado exitosamente",
+        text: "",
+        icon: "success",
+      });
+
       setDni("");
       setNombre("");
       setApellido("");
@@ -39,17 +45,7 @@ function AgregarCliente() {
   };
 
   return (
-    <form
-      className="form"
-      onSubmit={handleSubmit}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "10px",
-        width: "300px",
-        margin: "auto",
-      }}
-    >
+    <form className="form" onSubmit={handleSubmit}>
       <input
         className="input"
         type="text"
