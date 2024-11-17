@@ -26,13 +26,16 @@ export function ProtectedLayout() {
 
   return (
     <div className="protected-layout">
-      <h2>Sistema de Gestion Tibu-Boxing-Club</h2>
+      <h2>Sistema de Gestion Tibu Boxing Club</h2>
       <nav className="menu">
         <button onClick={() => navigate("/AgregarCliente")}>
           Agregar Cliente
         </button>
         <button onClick={() => navigate("/Buscarcliente")}>
           Buscar Cliente
+        </button>
+        <button onClick={() => navigate("/ListarClientes")}>
+          Listar Clientes
         </button>
         <button onClick={handleLogout}>Cerrar Sesión</button>
       </nav>

@@ -3,6 +3,7 @@ import Auth from "./components/pages/auth/Auth"; // Componente de Login/Register
 import AgregarCliente from "./components/pages/agregarcliente/agregarCliente";
 import BuscarCliente from "./components/pages/buscarcliente/Buscarcliente";
 import { ProtectedLayout } from "./components/layout/protectedlayout/ProtectedLayout";
+import ListarClientes from "./components/pages/listarclientes/ListarClientes";
 // Layout Protegido
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Route element={<ProtectedLayout />}>
           <Route path="/AgregarCliente" element={<AgregarCliente />} />
           <Route path="/Buscarcliente" element={<BuscarCliente />} />
+          <Route path="/ListarClientes" element={<ListarClientes />} />
         </Route>
       </Routes>
     </BrowserRouter>

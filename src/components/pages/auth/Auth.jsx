@@ -5,12 +5,13 @@ import {
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../../../firebase"; // Asegúrate de importar `auth` correctamente
-// Opcional: Archivo para estilos personalizados
+import "./auth.css"; // Opcional: Archivo para estilos personalizados
 
 function Auth() {
   const [isLogin, setIsLogin] = useState(true); // Estado para alternar entre Login y Register
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
   const navigate = useNavigate(); // Hook para redirigir
 
   // Manejar el inicio de sesión
@@ -50,13 +51,22 @@ function Auth() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <div className="password-container">
+          <input
+            type={showPassword ? "text" : "password"} // Cambia el tipo de input
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
+            type="button"
+            className="show-password-button"
+            onClick={() => setShowPassword(!showPassword)} // Cambia el estado
+          >
+            {showPassword ? "Ocultar" : "Mostrar"}
+          </button>
+        </div>
         <button type="submit">
           {isLogin ? "Iniciar Sesión" : "Registrarse"}
         </button>
