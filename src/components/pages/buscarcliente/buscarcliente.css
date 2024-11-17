@@ -3,7 +3,6 @@
   text-align: center;
 }
 
-/* Contenedor principal del buscador */
 .search-container {
   display: flex;
   align-items: center;
@@ -16,7 +15,6 @@
   gap: 15px;
 }
 
-/* Estilo del input de búsqueda */
 .search-input {
   width: 30%;
   padding: 10px;
@@ -26,7 +24,6 @@
   font-size: 16px;
 }
 
-/* Estilo del botón de búsqueda */
 .button {
   padding: 10px 20px;
   font-size: 16px;
@@ -46,20 +43,17 @@
   padding: 15px;
 }
 
-/* Estilo del contenedor de resultados */
 .results-container {
   margin-top: 20px;
   width: 100%;
 }
 
-/* Estilo de la lista de resultados */
 .results-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* Estilo de cada elemento de resultado */
 .result-item {
   padding: 10px;
   border-bottom: 1px solid #ddd;
@@ -70,7 +64,6 @@
   color: #333;
 }
 
-/* Estilo para el mensaje de "no resultados" */
 .no-results {
   color: #666;
   font-size: 14px;

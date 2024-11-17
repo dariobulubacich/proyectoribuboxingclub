@@ -1,16 +1,19 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Navbar } from "./components/layout/NavBar";
-
+import Auth from "./components/pages/auth/Auth"; // Componente de Login/Register
 import AgregarCliente from "./components/pages/agregarcliente/agregarCliente";
 import BuscarCliente from "./components/pages/buscarcliente/Buscarcliente";
+import { ProtectedLayout } from "./components/layout/protectedlayout/ProtectedLayout";
+// Layout Protegido
 
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
       <Routes>
-        <Route path="/AgregarCliente" element={<AgregarCliente />} />
-        <Route path="/Buscarcliente" element={<BuscarCliente />} />
+        <Route path="/" element={<Auth />} />
+        <Route element={<ProtectedLayout />}>
+          <Route path="/AgregarCliente" element={<AgregarCliente />} />
+          <Route path="/Buscarcliente" element={<BuscarCliente />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
