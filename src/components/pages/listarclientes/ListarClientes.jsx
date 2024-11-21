@@ -6,7 +6,10 @@ import "./listarClientes.css";
 
 function ListarClientes() {
   const [clientes, setClientes] = useState([]);
+  const [filteredClientes, setFilteredClientes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterBy, setFilterBy] = useState("apellido");
 
   // Función para obtener clientes desde Firestore
   const fetchClientes = async () => {
@@ -17,6 +20,7 @@ function ListarClientes() {
         ...doc.data(),
       }));
       setClientes(clientesList);
+      setFilteredClientes(clientesList); // Inicialmente, mostrar todos los clientes
       setLoading(false);
     } catch (error) {
       console.error("Error al obtener clientes:", error);
@@ -28,9 +32,29 @@ function ListarClientes() {
     fetchClientes();
   }, []);
 
+  // Filtrar clientes cuando cambia el término de búsqueda o el criterio de filtro
+  useEffect(() => {
+    const filterClientes = () => {
+      const term = searchTerm.toLowerCase();
+      const filtered = clientes.filter((cliente) => {
+        if (filterBy === "apellido") {
+          return cliente.apellido?.toLowerCase().includes(term);
+        } else if (filterBy === "dni") {
+          return cliente.dni?.toString().includes(term);
+        } else if (filterBy === "MesPago") {
+          return cliente.ultimoMesPago?.toLowerCase().includes(term);
+        }
+        return true;
+      });
+      setFilteredClientes(filtered);
+    };
+
+    filterClientes();
+  }, [searchTerm, filterBy, clientes]);
+
   // Función para exportar a Excel
   const exportToExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(clientes);
+    const worksheet = XLSX.utils.json_to_sheet(filteredClientes);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Clientes");
     XLSX.writeFile(workbook, "ListadoClientes.xlsx");
@@ -61,8 +85,32 @@ function ListarClientes() {
       ) : (
         <>
           <div className="actions">
-            <button onClick={exportToExcel}>Exportar a Excel</button>
-            <button onClick={printTable}>Imprimir</button>
+            <div>
+              <select
+                className="input"
+                value={filterBy}
+                onChange={(e) => setFilterBy(e.target.value)}
+              >
+                <option value="apellido">Apellido</option>
+                <option value="dni">DNI</option>
+                <option value="MesPago">Último Mes de Pago</option>
+              </select>
+              <input
+                className="input"
+                type="text"
+                placeholder={`Buscar por ${filterBy}`}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="button-exp-imp">
+            <button className="button-export" onClick={exportToExcel}>
+              Exportar a Excel
+            </button>
+            <button className="button-export" onClick={printTable}>
+              Imprimir
+            </button>
           </div>
           <table id="clientesTable" className="clientes-table">
             <thead>
@@ -76,7 +124,7 @@ function ListarClientes() {
               </tr>
             </thead>
             <tbody>
-              {clientes.map((cliente) => (
+              {filteredClientes.map((cliente) => (
                 <tr key={cliente.id}>
                   <td>{cliente.nombre}</td>
                   <td>{cliente.apellido}</td>

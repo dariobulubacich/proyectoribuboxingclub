@@ -1,0 +1,49 @@
+.ingresos-mensuales {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ingresos-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.ingresos-table th,
+.ingresos-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.ingresos-table th {
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+}
+
+.filtro-container {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  gap: 15px;
+}
+
+label {
+  border: 1px solid #ddd;
+  padding: 8px;
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+}
+
+input {
+  background-color: #4caf50;
+  color: white;
+  font-size: 16px;
+}
