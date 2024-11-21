@@ -234,24 +234,26 @@ function BuscarCliente() {
                       ))}
                     </ul>
                   )}
-                  <input
-                    type="number"
-                    className="meses-input"
-                    placeholder="Cuanto meses abona"
-                    value={mesesPagados[cliente.id] || ""}
-                    onChange={(e) =>
-                      handleMesesPagadosChange(cliente.id, e.target.value)
-                    }
-                  />
-                  <input
-                    type="number"
-                    className="cantidad-input"
-                    placeholder="Monto Abonado"
-                    value={cantidadPagada[cliente.id] || ""}
-                    onChange={(e) =>
-                      handleCantidadPagadaChange(cliente.id, e.target.value)
-                    }
-                  />
+                  <div className="div inputs-var">
+                    <input
+                      className="input-buscar-client"
+                      type="number"
+                      placeholder="Cuanto meses abona"
+                      value={mesesPagados[cliente.id] || ""}
+                      onChange={(e) =>
+                        handleMesesPagadosChange(cliente.id, e.target.value)
+                      }
+                    />
+                    <input
+                      className="input-buscar-client"
+                      type="number"
+                      placeholder="Monto Abonado"
+                      value={cantidadPagada[cliente.id] || ""}
+                      onChange={(e) =>
+                        handleCantidadPagadaChange(cliente.id, e.target.value)
+                      }
+                    />
+                  </div>
                   <div className="div-button">
                     <button
                       className="button"

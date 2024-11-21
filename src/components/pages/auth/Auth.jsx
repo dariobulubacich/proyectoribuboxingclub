@@ -45,6 +45,7 @@ function Auth() {
       <h2>{isLogin ? "Iniciar Sesión" : "Registrarse"}</h2>
       <form onSubmit={isLogin ? handleLogin : handleRegister}>
         <input
+          className="input-aut"
           type="email"
           placeholder="Correo electrónico"
           value={email}
@@ -53,6 +54,7 @@ function Auth() {
         />
         <div className="password-container">
           <input
+            className="input-aut"
             type={showPassword ? "text" : "password"} // Cambia el tipo de input
             placeholder="Contraseña"
             value={password}

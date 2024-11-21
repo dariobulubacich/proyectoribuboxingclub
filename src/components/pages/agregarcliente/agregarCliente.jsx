@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
-import "./agregarcliente.css";
 import Swal from "sweetalert2";
+import "./agregarcliente.css";
 
 function AgregarCliente() {
   const [dni, setDni] = useState("");
@@ -46,65 +46,69 @@ function AgregarCliente() {
 
   return (
     <form className="form" onSubmit={handleSubmit}>
-      <input
-        className="input"
-        type="text"
-        placeholder="Ingrese fecha"
-        value={fechaPago}
-        onChange={(e) => setfechaPago(e.target.value)}
-        required
-      />
-      <input
-        className="input"
-        type="text"
-        placeholder="DNI"
-        value={dni}
-        onChange={(e) => setDni(e.target.value)}
-        required
-      />
-      <input
-        className="input"
-        type="text"
-        placeholder="Nombre"
-        value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
-        required
-      />
-      <input
-        className="input"
-        type="text"
-        placeholder="Apellido"
-        value={apellido}
-        onChange={(e) => setApellido(e.target.value)}
-        required
-      />
-      <input
-        className="input"
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <input
-        className="input"
-        type="tel"
-        placeholder="Teléfono"
-        value={telefono}
-        onChange={(e) => setTelefono(e.target.value)}
-        required
-      />
-      <input
-        className="input"
-        type="mespago"
-        placeholder="Mes a abonar"
-        value={mesPago}
-        onChange={(e) => setmesPago(e.target.value)}
-        required
-      />
-      <button type="submit" className="agregar-button">
-        Agregar Cliente
-      </button>
+      <div className="form-containers">
+        <input
+          className="inputs"
+          type="text"
+          placeholder="Ingrese fecha"
+          value={fechaPago}
+          onChange={(e) => setfechaPago(e.target.value)}
+          required
+        />
+        <input
+          className="inputs"
+          type="text"
+          placeholder="DNI"
+          value={dni}
+          onChange={(e) => setDni(e.target.value)}
+          required
+        />
+        <input
+          className="inputs"
+          type="text"
+          placeholder="Nombre"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+          required
+        />
+        <input
+          className="inputs"
+          type="text"
+          placeholder="Apellido"
+          value={apellido}
+          onChange={(e) => setApellido(e.target.value)}
+          required
+        />
+        <input
+          className="inputs"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          className="inputs"
+          type="tel"
+          placeholder="Teléfono"
+          value={telefono}
+          onChange={(e) => setTelefono(e.target.value)}
+          required
+        />
+        <input
+          className="inputs"
+          type="mespago"
+          placeholder="Mes a abonar"
+          value={mesPago}
+          onChange={(e) => setmesPago(e.target.value)}
+          required
+        />
+      </div>
+      <div className="div-agre-client">
+        <button type="submit" className="agregar-button">
+          Agregar Cliente
+        </button>
+      </div>
     </form>
   );
 }

@@ -80,6 +80,7 @@ function IngresosMensuales() {
       <div className="filtro-container">
         <label htmlFor="filtro-mes">Filtrar por mes:</label>
         <input
+          className="input-ing-men"
           type="month"
           id="filtro-mes"
           value={mesSeleccionado}

@@ -12,7 +12,8 @@
   margin-bottom: 20px;
 }
 
-.auth-container input {
+.input-aut {
+  background-color: white;
   width: 100%;
   padding: 10px;
   margin: 10px 0;
@@ -37,7 +38,7 @@
 .auth-container .toggle-button {
   background: none;
   border: none;
-  color: #4caf50;
+  color: #111111;
   cursor: pointer;
   text-decoration: underline;
   margin-top: 10px;
@@ -57,31 +58,4 @@
   background: none;
   border: none;
   font-size: 14px;
-}
-
-@media (max-width: 768px) {
-  .auth-container {
-    max-width: 90%;
-    padding: 15px;
-  }
-
-  input,
-  button {
-    font-size: 0.9em;
-    padding: 8px;
-  }
-
-  h2 {
-    font-size: 50px;
-  }
-
-  .password-container {
-    flex-direction: column; /* Apila los elementos verticalmente */
-    gap: 5px;
-  }
-
-  .show-password-button {
-    align-self: flex-start; /* Alinea el botón a la izquierda */
-    font-size: 0.8em;
-  }
 }
