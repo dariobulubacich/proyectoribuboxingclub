@@ -6,6 +6,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../../../firebase"; // Asegúrate de importar `auth` correctamente
 import "./auth.css"; // Opcional: Archivo para estilos personalizados
+import Swal from "sweetalert2";
 
 function Auth() {
   const [isLogin, setIsLogin] = useState(true); // Estado para alternar entre Login y Register
@@ -19,11 +20,17 @@ function Auth() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      alert("Inicio de sesión exitoso");
+      Swal.fire("Inicio correcto");
+      // alert("Inicio de sesión exitoso");
       navigate("/AgregarCliente"); // Redirige a la página deseada después de autenticarse
-    } catch (error) {
-      console.error("Error en el inicio de sesión: ", error.message);
-      alert("Error: " + error.message);
+    } catch {
+      Swal.fire({
+        icon: "error",
+        title: "Usuario o contraseña incorrecto",
+        text: "",
+      });
+      // console.error("Error en el inicio de sesión: ", error.message);
+      // alert("Error: " + error.message);
     }
   };
 
@@ -34,9 +41,15 @@ function Auth() {
       await createUserWithEmailAndPassword(auth, email, password);
       alert("Usuario registrado exitosamente");
       navigate("/AgregarCliente"); // Redirige a la página deseada después del registro
-    } catch (error) {
-      console.error("Error en el registro: ", error.message);
-      alert("Error: " + error.message);
+    } catch {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+        footer: '<a href="#">Why do I have this issue?</a>',
+      });
+      //   console.error("Error en el registro: ", error.message);
+      //   alert("Error: " + error.message);
     }
   };
 

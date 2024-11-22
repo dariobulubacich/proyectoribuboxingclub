@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase";
+import * as XLSX from "xlsx"; // Importar biblioteca XLSX
 import "./ingresosMensuales.css";
 
 function IngresosMensuales() {
@@ -9,7 +10,6 @@ function IngresosMensuales() {
   const [loading, setLoading] = useState(true);
   const [mesSeleccionado, setMesSeleccionado] = useState(""); // Filtro de mes (mm-yyyy)
 
-  // Función para calcular los ingresos por mes
   const calcularIngresosPorMes = async () => {
     try {
       const clientesSnapshot = await getDocs(collection(db, "clientes"));
@@ -37,7 +37,6 @@ function IngresosMensuales() {
         return acumulado;
       }, {});
 
-      // Convertir a un array de objetos para mostrar en la tabla
       const ingresosArray = Object.entries(ingresos).map(([mes, monto]) => ({
         mes,
         monto,
@@ -52,17 +51,33 @@ function IngresosMensuales() {
     }
   };
 
-  // Función para filtrar ingresos por el mes seleccionado
   const filtrarPorMes = (mes) => {
-    setMesSeleccionado(mes); // Actualizar el mes seleccionado
+    setMesSeleccionado(mes);
     if (mes === "") {
-      // Si no hay mes seleccionado, mostrar todos los datos
       setIngresosFiltrados(ingresosPorMes);
     } else {
-      // Filtrar por el mes seleccionado
       const filtrados = ingresosPorMes.filter((ingreso) => ingreso.mes === mes);
       setIngresosFiltrados(filtrados);
     }
+  };
+
+  const handlePrint = () => {
+    window.print(); // Inicia la impresión de la página
+  };
+
+  const exportarExcel = () => {
+    const datos = ingresosFiltrados.map((ingreso) => ({
+      Mes: ingreso.mes,
+      "Monto Total Cobrado": ingreso.monto.toFixed(2),
+    }));
+
+    // Crear un libro de trabajo (workbook) y una hoja (worksheet)
+    const worksheet = XLSX.utils.json_to_sheet(datos);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Ingresos");
+
+    // Generar el archivo Excel y descargarlo
+    XLSX.writeFile(workbook, "IngresosMensuales.xlsx");
   };
 
   useEffect(() => {
@@ -78,7 +93,9 @@ function IngresosMensuales() {
       <h2>Ingresos por Mes</h2>
 
       <div className="filtro-container">
-        <label htmlFor="filtro-mes">Filtrar por mes:</label>
+        <label className="filtrar-mes" htmlFor="filtro-mes">
+          Filtrar por mes:
+        </label>
         <input
           className="input-ing-men"
           type="month"
@@ -86,6 +103,12 @@ function IngresosMensuales() {
           value={mesSeleccionado}
           onChange={(e) => filtrarPorMes(e.target.value)}
         />
+        <button className="label-var" onClick={handlePrint}>
+          Imprimir
+        </button>
+        <button className="label-var" onClick={exportarExcel}>
+          Exportar a Excel
+        </button>
       </div>
 
       {ingresosFiltrados.length === 0 ? (

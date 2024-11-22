@@ -32,7 +32,8 @@
 }
 
 .auth-container button:hover {
-  background-color: #a0c2e5;
+  background-color: #b2ddb4;
+  color: #111111;
 }
 
 .auth-container .toggle-button {

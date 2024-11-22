@@ -2,6 +2,7 @@ import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { auth } from "../../../firebase"; // Importar Firebase auth
 import { signOut } from "firebase/auth";
 import "./proyectedlayout.css";
+import Swal from "sweetalert2";
 
 export function ProtectedLayout() {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ export function ProtectedLayout() {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        alert("Sesión cerrada exitosamente");
+        Swal.fire("Sesion cerrada con exito");
         navigate("/"); // Redirigir al login después de cerrar sesión
       })
       .catch((error) => {
