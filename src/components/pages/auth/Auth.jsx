@@ -7,6 +7,8 @@ import {
 import { auth } from "../../../firebase"; // Asegúrate de importar `auth` correctamente
 import "./auth.css"; // Opcional: Archivo para estilos personalizados
 import Swal from "sweetalert2";
+import Grid from "@mui/material/Grid2";
+import { Typography } from "@mui/material";
 
 function Auth() {
   const [isLogin, setIsLogin] = useState(true); // Estado para alternar entre Login y Register
@@ -54,45 +56,54 @@ function Auth() {
   };
 
   return (
-    <div className="auth-container">
-      <h2>{isLogin ? "Iniciar Sesión" : "Registrarse"}</h2>
-      <form onSubmit={isLogin ? handleLogin : handleRegister}>
-        <input
-          className="input-aut"
-          type="email"
-          placeholder="Correo electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <div className="password-container">
-          <input
-            className="input-aut"
-            type={showPassword ? "text" : "password"} // Cambia el tipo de input
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button
-            type="button"
-            className="show-password-button"
-            onClick={() => setShowPassword(!showPassword)} // Cambia el estado
-          >
-            {showPassword ? "Ocultar" : "Mostrar"}
-          </button>
+    <Grid container={true}>
+      <Grid size={{ xs: 8, sm: 6, md: 8 }}>
+        <div className="auth-container">
+          <Typography variant="h2">
+            {isLogin ? "Iniciar Sesión" : "Registrarse"}
+          </Typography>
+          <form onSubmit={isLogin ? handleLogin : handleRegister}>
+            <input
+              className="input-aut"
+              type="email"
+              placeholder="Correo electrónico"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <div className="password-container">
+              <input
+                className="input-aut"
+                type={showPassword ? "text" : "password"} // Cambia el tipo de input
+                placeholder="Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="show-password-button"
+                onClick={() => setShowPassword(!showPassword)} // Cambia el estado
+              >
+                {showPassword ? "Ocultar" : "Mostrar"}
+              </button>
+            </div>
+            <button type="submit">
+              {isLogin ? "Iniciar Sesión" : "Registrarse"}
+            </button>
+          </form>
+          <p>
+            {isLogin ? "¿No tienes una cuenta?" : "¿Ya tienes una cuenta?"}{" "}
+            <button
+              className="toggle-button"
+              onClick={() => setIsLogin(!isLogin)}
+            >
+              {isLogin ? "Regístrate" : "Inicia sesión"}
+            </button>
+          </p>
         </div>
-        <button type="submit">
-          {isLogin ? "Iniciar Sesión" : "Registrarse"}
-        </button>
-      </form>
-      <p>
-        {isLogin ? "¿No tienes una cuenta?" : "¿Ya tienes una cuenta?"}{" "}
-        <button className="toggle-button" onClick={() => setIsLogin(!isLogin)}>
-          {isLogin ? "Regístrate" : "Inicia sesión"}
-        </button>
-      </p>
-    </div>
+      </Grid>
+    </Grid>
   );
 }
 
