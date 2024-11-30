@@ -35,6 +35,9 @@ export function ProtectedLayout() {
         <button onClick={() => navigate("/Buscarcliente")}>
           Buscar Cliente
         </button>
+        <button onClick={() => navigate("/PagesClientes")}>
+          Para Clientes
+        </button>
         <button onClick={() => navigate("/ListarClientes")}>
           Listar Clientes
         </button>
