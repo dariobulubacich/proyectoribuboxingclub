@@ -4,8 +4,9 @@ import { db } from "../../../firebase";
 
 function BuscarCliente() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [cliente, setCliente] = useState(null); // Un solo cliente
-  const [ultimoPago, setUltimoPago] = useState(null); // Última cuota pagada
+  const [cliente, setCliente] = useState(null);
+  const [ultimoPago, setUltimoPago] = useState(null);
+  const [timer, setTimer] = useState(null);
 
   // Función para buscar cliente por DNI
   const buscarClientePorDNI = async (dni) => {
@@ -17,7 +18,6 @@ function BuscarCliente() {
         const clienteDoc = querySnapshot.docs[0];
         const clienteData = { id: clienteDoc.id, ...clienteDoc.data() };
 
-        // Obtener el historial de pagos
         const pagosRef = collection(db, `clientes/${clienteDoc.id}/pagos`);
         const pagosSnapshot = await getDocs(pagosRef);
 
@@ -26,39 +26,41 @@ function BuscarCliente() {
           pagos.push({ id: doc.id, ...doc.data() });
         });
 
-        // Ordenar pagos por fecha (más recientes primero)
         pagos.sort((a, b) => new Date(b.fechaPago) - new Date(a.fechaPago));
 
-        // Actualizar estados
         setCliente(clienteData);
         setUltimoPago(pagos[0] || null);
+
+        // Iniciar temporizador para limpiar después de 15 segundos
+        if (timer) clearTimeout(timer);
+        setTimer(setTimeout(() => limpiarPantalla(), 15000));
       } else {
-        setCliente(null);
-        setUltimoPago(null);
+        limpiarPantalla();
       }
     } catch (error) {
       console.error("Error buscando cliente: ", error);
     }
   };
 
-  // UseEffect para buscar cliente cuando el DNI cambia
+  // Limpiar pantalla
+  const limpiarPantalla = () => {
+    setCliente(null);
+    setUltimoPago(null);
+    setSearchTerm("");
+  };
+
   useEffect(() => {
     if (searchTerm) {
       const delayDebounce = setTimeout(() => {
         buscarClientePorDNI(searchTerm);
-      }, 500); // Retraso para evitar llamadas excesivas
+      }, 500);
       return () => clearTimeout(delayDebounce);
-    } else {
-      setCliente(null);
-      setUltimoPago(null);
     }
   }, [searchTerm]);
 
   return (
     <div>
-      <div className="h2">
-        <h2>Buscar Cliente</h2>
-      </div>
+      <h2>Buscar Cliente</h2>
       <div className="search-container">
         <input
           className="search-input"
@@ -68,7 +70,6 @@ function BuscarCliente() {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-
       <div className="results-container">
         {cliente ? (
           <div className="client-info">
