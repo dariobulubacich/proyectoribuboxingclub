@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../firebase";
+import "./pagesclientes.css";
 
 function BuscarCliente() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,9 +32,9 @@ function BuscarCliente() {
         setCliente(clienteData);
         setUltimoPago(pagos[0] || null);
 
-        // Iniciar temporizador para limpiar después de 15 segundos
+        // Iniciar temporizador para limpiar después de 20 segundos
         if (timer) clearTimeout(timer);
-        setTimer(setTimeout(() => limpiarPantalla(), 15000));
+        setTimer(setTimeout(() => limpiarPantalla(), 20000));
       } else {
         limpiarPantalla();
       }
@@ -53,7 +54,7 @@ function BuscarCliente() {
     if (searchTerm) {
       const delayDebounce = setTimeout(() => {
         buscarClientePorDNI(searchTerm);
-      }, 500);
+      }, 1500);
       return () => clearTimeout(delayDebounce);
     }
   }, [searchTerm]);
@@ -64,7 +65,7 @@ function BuscarCliente() {
       <div className="search-container">
         <input
           className="search-input"
-          type="text"
+          type="number"
           placeholder="Ingrese DNI"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
