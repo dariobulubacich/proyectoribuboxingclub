@@ -41,9 +41,7 @@ export function ProtectedLayout() {
         <button onClick={() => navigate("/ListarClientes")}>
           Listar Clientes
         </button>
-        <button onClick={() => navigate("/IngresosMensuales")}>
-          Resumen Pagos
-        </button>
+        <button onClick={() => navigate("/IngresosMensuales")}>Resumen</button>
         <button onClick={handleLogout}>Cerrar Sesión</button>
       </nav>
       <main>

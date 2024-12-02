@@ -3,6 +3,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase";
 import * as XLSX from "xlsx"; // Importa la biblioteca XLSX
 import "./listarClientes.css";
+//import { products } from "../../../products";
 
 function ListarClientes() {
   const [clientes, setClientes] = useState([]);
@@ -76,6 +77,14 @@ function ListarClientes() {
   if (loading) {
     return <p>Cargando clientes...</p>;
   }
+  //agregar clientes en forma masiva
+  // const funcionParaAgregar = () => {
+  //   const productsCollection = collection(db, "clientes");
+
+  //   products.forEach((product) => {
+  //     addDoc(productsCollection, product);
+  //   });
+  // };
 
   return (
     <div className="listar-clientes">
@@ -142,6 +151,9 @@ function ListarClientes() {
           </table>
         </>
       )}
+      {/* <button className="button" onClick={funcionParaAgregar}>
+        Cargar clientes masivos
+      </button> */}
     </div>
   );
 }
