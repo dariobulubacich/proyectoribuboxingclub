@@ -22,7 +22,7 @@ function Auth() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      Swal.fire("Inicio correcto");
+
       // alert("Inicio de sesión exitoso");
       navigate("/AgregarCliente"); // Redirige a la página deseada después de autenticarse
     } catch {
@@ -57,7 +57,7 @@ function Auth() {
 
   return (
     <Grid container={true}>
-      <Grid size={{ xs: 8, sm: 6, md: 8 }}>
+      <Grid size={{ xs: 12 }}>
         <div className="auth-container">
           <Typography variant="h2">
             {isLogin ? "Iniciar Sesión" : "Registrarse"}
