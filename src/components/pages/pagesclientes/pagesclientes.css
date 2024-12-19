@@ -16,7 +16,7 @@ h2 {
   width: 100%;
   max-width: 200px;
   padding: 10px 15px;
-  font-size: 16px;
+  font-size: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -60,4 +60,15 @@ h2 {
   color: #ff4d4f;
   font-weight: bold;
   margin-top: 10px;
+}
+
+.deuda-alerta {
+  color: red;
+  font-weight: bold;
+  font-size: 50px;
+}
+
+.sin-deuda {
+  color: green;
+  font-weight: bold;
 }

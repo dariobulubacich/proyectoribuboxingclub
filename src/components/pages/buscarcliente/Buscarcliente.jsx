@@ -42,18 +42,23 @@ function BuscarCliente() {
   const registrarPago = async (clienteId) => {
     try {
       const clienteRef = doc(db, "clientes", clienteId);
+
       const meses = parseInt(mesesPagados[clienteId]);
       const monto = parseFloat(cantidadPagada[clienteId]);
+      const fechaManual = ultimoMesConPago[clienteId]; // Fecha ingresada manualmente
 
       if (
-        !meses ||
-        !monto ||
-        isNaN(meses) ||
-        isNaN(monto) ||
-        meses <= 0 ||
-        monto <= 0
+        (!meses ||
+          !monto ||
+          isNaN(meses) ||
+          isNaN(monto) ||
+          meses <= 0 ||
+          monto <= 0) &&
+        !fechaManual
       ) {
-        Swal.fire("Por favor, introduce valores válidos para meses y monto.");
+        Swal.fire(
+          "Por favor, introduce valores válidos para meses, monto o fecha."
+        );
         return;
       }
 
@@ -65,31 +70,39 @@ function BuscarCliente() {
 
       const clienteData = clienteSnapshot.data();
       const mesesTotales = clienteData.mesesPagadosTotales || 0;
-      const ultimoMesPago = clienteData.ultimoMesPago;
+      let nuevoMesPago;
 
-      // Convertir último mes de pago a fecha (si existe)
-      let fechaUltimoMes = ultimoMesPago
-        ? new Date(
-            ultimoMesPago.split("-")[2], // Año
-            ultimoMesPago.split("-")[1] - 1, // Mes (base 0)
-            1 // Día (asumimos el primero del mes)
-          )
-        : new Date();
+      if (fechaManual) {
+        // Usar la fecha manualmente ingresada y formatearla
+        nuevoMesPago = new Date(fechaManual).toLocaleDateString("es-ES", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+      } else {
+        // Si no se proporciona una fecha manual, calcula la fecha según los meses pagados
+        const ultimoMesPago = clienteData.ultimoMesPago;
+        let fechaUltimoMes = ultimoMesPago
+          ? new Date(
+              ultimoMesPago.split("-")[2], // Año
+              ultimoMesPago.split("-")[1] - 1, // Mes (base 0)
+              ultimoMesPago.split("-")[0] // Día
+            )
+          : new Date();
 
-      // Sumar meses abonados
-      fechaUltimoMes.setMonth(fechaUltimoMes.getMonth() + meses);
+        fechaUltimoMes.setMonth(fechaUltimoMes.getMonth() + meses);
 
-      // Obtener el nuevo mes como string
-      const nuevoMesPago = `${fechaUltimoMes
-        .getDate()
-        .toString()
-        .padStart(2, "0")}-${(fechaUltimoMes.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}-${fechaUltimoMes.getFullYear()}`;
+        // Formatear la fecha calculada
+        nuevoMesPago = fechaUltimoMes.toLocaleDateString("es-ES", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+      }
 
       const nuevoPago = {
-        mesesPagados: meses,
-        cantidadPagada: monto,
+        mesesPagados: meses || 0,
+        cantidadPagada: monto || 0,
         fechaPago: nuevoMesPago,
         timestamp: new Date(),
       };
@@ -97,7 +110,7 @@ function BuscarCliente() {
       // Actualizar cliente con el último mes de pago y meses acumulados
       await updateDoc(clienteRef, {
         ultimoMesPago: nuevoMesPago,
-        mesesPagadosTotales: mesesTotales + meses,
+        mesesPagadosTotales: mesesTotales + (meses || 0),
       });
 
       // Agregar el pago a la subcolección "pagos"
@@ -114,10 +127,10 @@ function BuscarCliente() {
         )
       );
 
-      // Actualizar último mes con pago (última fecha de pago)
+      // Actualizar último mes con pago
       setUltimoMesConPago((prev) => ({
         ...prev,
-        [clienteId]: nuevoPago.fechaPago, // Actualizamos con la nueva fecha de pago
+        [clienteId]: nuevoMesPago, // Actualizamos con la nueva fecha de pago
       }));
 
       Swal.fire({
@@ -235,15 +248,17 @@ function BuscarCliente() {
                     </ul>
                   )}
                   <div className="div inputs-var">
-                    <input
-                      className="input-buscar-client"
-                      type="number"
-                      placeholder="Cuanto meses abona"
-                      value={mesesPagados[cliente.id] || ""}
-                      onChange={(e) =>
-                        handleMesesPagadosChange(cliente.id, e.target.value)
-                      }
-                    />
+                    {
+                      <input
+                        className="input-buscar-client"
+                        type="number"
+                        placeholder="Cuanto meses abona"
+                        value={mesesPagados[cliente.id] || ""}
+                        onChange={(e) =>
+                          handleMesesPagadosChange(cliente.id, e.target.value)
+                        }
+                      />
+                    }
                     <input
                       className="input-buscar-client"
                       type="number"
@@ -251,6 +266,18 @@ function BuscarCliente() {
                       value={cantidadPagada[cliente.id] || ""}
                       onChange={(e) =>
                         handleCantidadPagadaChange(cliente.id, e.target.value)
+                      }
+                    />
+                    <input
+                      className="input-buscar-client"
+                      type="date"
+                      placeholder="Última Fecha de Pago"
+                      value={ultimoMesConPago[cliente.id] || ""}
+                      onChange={(e) =>
+                        setUltimoMesConPago((prev) => ({
+                          ...prev,
+                          [cliente.id]: e.target.value,
+                        }))
                       }
                     />
                   </div>
