@@ -48,8 +48,6 @@ function Auth() {
         text: "Something went wrong!",
         footer: '<a href="#">Why do I have this issue?</a>',
       });
-      //   console.error("Error en el registro: ", error.message);
-      //   alert("Error: " + error.message);
     }
   };
 
