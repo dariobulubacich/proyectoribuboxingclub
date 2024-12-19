@@ -31,8 +31,6 @@ function Auth() {
         title: "Usuario o contraseña incorrecto",
         text: "",
       });
-      // console.error("Error en el inicio de sesión: ", error.message);
-      // alert("Error: " + error.message);
     }
   };
 
