@@ -33,30 +33,40 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   gap: 15px;
 }
+.filtro-container,
+.egreso-form {
+  margin-bottom: 20px;
+}
 
-.filtrar-mes {
-  border: 1px solid #ddd;
-  padding: 8px;
-  background-color: #4caf50;
-  color: white;
+.filtro-container label,
+.egreso-form h3 {
   font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
+  color: #555;
 }
-
-.label-var {
-  border: 1px solid #ddd;
+.filtro-container input,
+.egreso-form input {
   padding: 8px;
-  background-color: #4caf50;
-  color: white;
-  font-weight: bold;
-}
-
-.label-var:hover {
-  background-color: #b2ddb4;
-  color: black;
-}
-
-.input-ing-men {
-  background-color: #4caf50;
-  color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   font-size: 16px;
+  width: calc(100% - 20px);
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+.exportar {
+  width: 30%;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #45a049;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.div-registrar {
+  display: flex;
 }
