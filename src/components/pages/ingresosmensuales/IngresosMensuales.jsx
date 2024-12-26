@@ -16,6 +16,35 @@ function IngresosMensuales() {
     monto: 0,
     descripcion: "",
   });
+  const [nuevoIngreso, setNuevoIngreso] = useState({
+    fecha: "",
+    monto: 0,
+    descripcion: "",
+  });
+
+  const agregarIngreso = async () => {
+    try {
+      if (
+        !nuevoIngreso.fecha ||
+        !nuevoIngreso.monto ||
+        !nuevoIngreso.descripcion
+      ) {
+        alert("Debes ingresar una fecha, monto y descripción válidos.");
+        return;
+      }
+
+      await addDoc(collection(db, "ingresos"), {
+        fecha: nuevoIngreso.fecha,
+        monto: parseFloat(nuevoIngreso.monto),
+        descripcion: nuevoIngreso.descripcion,
+      });
+
+      setNuevoIngreso({ fecha: "", monto: 0, descripcion: "" });
+      calcularIngresosPorMes(); // Actualizar ingresos
+    } catch (error) {
+      console.error("Error al agregar ingreso: ", error);
+    }
+  };
 
   // Obtener ingresos desde Firestore
   const calcularIngresosPorMes = async () => {
@@ -30,19 +59,27 @@ function IngresosMensuales() {
       const pagosPorCliente = await Promise.all(pagosPromises);
       const todosLosPagos = pagosPorCliente.flat();
 
-      const ingresos = todosLosPagos.reduce((acumulado, pago) => {
-        const fechaPago = new Date();
-        const mes = `${fechaPago.getFullYear()}-${(fechaPago.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}`;
+      const ingresosSnapshot = await getDocs(collection(db, "ingresos"));
+      const ingresosManuales = ingresosSnapshot.docs.map((doc) => doc.data());
 
-        if (!acumulado[mes]) {
-          acumulado[mes] = 0;
-        }
-        acumulado[mes] += parseFloat(pago.cantidadPagada);
+      const ingresos = [...todosLosPagos, ...ingresosManuales].reduce(
+        (acumulado, ingreso) => {
+          const fechaIngreso = new Date(ingreso.fecha || new Date());
+          const mes = `${fechaIngreso.getFullYear()}-${(
+            fechaIngreso.getMonth() + 1
+          )
+            .toString()
+            .padStart(2, "0")}`;
 
-        return acumulado;
-      }, {});
+          if (!acumulado[mes]) {
+            acumulado[mes] = 0;
+          }
+          acumulado[mes] += parseFloat(ingreso.cantidadPagada || ingreso.monto);
+
+          return acumulado;
+        },
+        {}
+      );
 
       const ingresosArray = Object.entries(ingresos).map(([mes, monto]) => ({
         mes,
@@ -217,6 +254,41 @@ function IngresosMensuales() {
         <button className="exportar" onClick={agregarEgreso}>
           Agregar Egreso
         </button>
+        <div className="ingreso-form">
+          <h3>Registrar Ingreso</h3>
+          <div className="div-registrar">
+            <input
+              type="date"
+              value={nuevoIngreso.fecha}
+              onChange={(e) =>
+                setNuevoIngreso((prev) => ({ ...prev, fecha: e.target.value }))
+              }
+            />
+          </div>
+
+          <input
+            type="number"
+            placeholder="Monto"
+            value={nuevoIngreso.monto}
+            onChange={(e) =>
+              setNuevoIngreso((prev) => ({ ...prev, monto: e.target.value }))
+            }
+          />
+          <input
+            type="text"
+            placeholder="Descripción"
+            value={nuevoIngreso.descripcion}
+            onChange={(e) =>
+              setNuevoIngreso((prev) => ({
+                ...prev,
+                descripcion: e.target.value,
+              }))
+            }
+          />
+          <button className="exportar" onClick={agregarIngreso}>
+            Agregar Ingreso
+          </button>
+        </div>
       </div>
 
       {ingresosFiltrados.length === 0 ? (

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   collection,
   getDocs,
@@ -14,19 +14,44 @@ import "./buscarcliente.css";
 import Swal from "sweetalert2";
 
 function BuscarCliente() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [apellidos, setApellidos] = useState([]);
+  const [selectedApellido, setSelectedApellido] = useState("");
   const [clientes, setClientes] = useState([]);
   const [mesesPagados, setMesesPagados] = useState({});
   const [cantidadPagada, setCantidadPagada] = useState({});
   const [historialPagos, setHistorialPagos] = useState({});
   const [ultimoMesConPago, setUltimoMesConPago] = useState({});
 
-  // Función para buscar clientes en Firestore
+  // Función para cargar apellidos únicos desde Firestore
+  const cargarApellidos = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "clientes"));
+      const uniqueApellidos = new Set();
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.apellido) uniqueApellidos.add(data.apellido);
+      });
+      setApellidos(Array.from(uniqueApellidos).sort());
+    } catch (error) {
+      console.error("Error cargando apellidos: ", error);
+    }
+  };
+
+  useEffect(() => {
+    cargarApellidos();
+  }, []);
+
+  // Función para buscar clientes por apellido seleccionado
   const buscarClientes = async () => {
     try {
+      if (!selectedApellido) {
+        Swal.fire("Por favor, selecciona un apellido.");
+        return;
+      }
+
       const q = query(
         collection(db, "clientes"),
-        where("dni", "==", searchTerm)
+        where("apellido", "==", selectedApellido)
       );
       const querySnapshot = await getDocs(q);
       const result = [];
@@ -204,13 +229,18 @@ function BuscarCliente() {
         <h2>Buscar Cliente</h2>
       </div>
       <div className="search-container">
-        <input
-          className="search-input"
-          type="text"
-          placeholder="Buscar por DNI"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <select
+          className="search-select"
+          value={selectedApellido}
+          onChange={(e) => setSelectedApellido(e.target.value)}
+        >
+          <option value="">Seleccionar apellido</option>
+          {apellidos.map((apellido, index) => (
+            <option key={index} value={apellido}>
+              {apellido}
+            </option>
+          ))}
+        </select>
         <button className="button" onClick={buscarClientes}>
           Buscar
         </button>

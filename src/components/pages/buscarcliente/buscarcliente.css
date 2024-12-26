@@ -84,3 +84,9 @@ br {
   font-size: 14px;
   text-align: center;
 }
+
+.search-select {
+  width: 250px;
+  font-size: 15x;
+  padding: 5px 10px;
+}

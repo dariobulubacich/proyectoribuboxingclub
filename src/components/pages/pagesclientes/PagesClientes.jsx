@@ -62,7 +62,7 @@ function BuscarCliente() {
 
         // Iniciar temporizador para limpiar después de 20 segundos
         if (timer) clearTimeout(timer);
-        setTimer(setTimeout(() => limpiarPantalla(), 20000));
+        setTimer(setTimeout(() => limpiarPantalla(), 10000));
       } else {
         limpiarPantalla();
       }
