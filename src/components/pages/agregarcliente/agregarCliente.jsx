@@ -29,7 +29,17 @@ function AgregarCliente() {
 
     if (!querySnapshot.empty) {
       const cliente = querySnapshot.docs[0];
-      setClienteExistente({ id: cliente.id, ...cliente.data() });
+      const datosCliente = { id: cliente.id, ...cliente.data() };
+      setClienteExistente(datosCliente);
+
+      // Inicializar los estados individuales
+      setNombre(datosCliente.nombre || "");
+      setApellido(datosCliente.apellido || "");
+      setEmail(datosCliente.email || "");
+      setTelefono(datosCliente.telefono || "");
+      setmesPago(datosCliente.mesPago || "");
+      setfechaPago(datosCliente.fechaPago || "");
+
       Swal.fire(
         "Cliente encontrado",
         "Puedes editar los datos del cliente.",
@@ -107,7 +117,7 @@ function AgregarCliente() {
           className="inputs"
           type="text"
           placeholder="Nombre"
-          value={clienteExistente ? clienteExistente.nombre : nombre}
+          value={nombre}
           onChange={(e) => setNombre(e.target.value)}
           required
         />
@@ -115,7 +125,7 @@ function AgregarCliente() {
           className="inputs"
           type="text"
           placeholder="Apellido"
-          value={clienteExistente ? clienteExistente.apellido : apellido}
+          value={apellido}
           onChange={(e) => setApellido(e.target.value)}
           required
         />
@@ -123,7 +133,7 @@ function AgregarCliente() {
           className="inputs"
           type="email"
           placeholder="Email"
-          value={clienteExistente ? clienteExistente.email : email}
+          value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
@@ -131,7 +141,7 @@ function AgregarCliente() {
           className="inputs"
           type="tel"
           placeholder="Teléfono"
-          value={clienteExistente ? clienteExistente.telefono : telefono}
+          value={telefono}
           onChange={(e) => setTelefono(e.target.value)}
           required
         />
@@ -139,7 +149,7 @@ function AgregarCliente() {
           className="inputs"
           type="text"
           placeholder="Mes a abonar"
-          value={clienteExistente ? clienteExistente.mesPago : mesPago}
+          value={mesPago}
           onChange={(e) => setmesPago(e.target.value)}
           required
         />
