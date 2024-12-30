@@ -7,9 +7,15 @@ function BuscarCliente() {
   const [searchTerm, setSearchTerm] = useState("");
   const [cliente, setCliente] = useState(null);
   const [ultimoPago, setUltimoPago] = useState(null);
-  const [tieneDeuda, setTieneDeuda] = useState(false); // Estado para manejar la deuda
-  const [mesesDeuda, setMesesDeuda] = useState(0); // Estado para manejar los meses de deuda
+  const [tieneDeuda, setTieneDeuda] = useState(false);
+  const [mesesDeuda, setMesesDeuda] = useState(0);
   const [timer, setTimer] = useState(null);
+
+  // Función para convertir una fecha en formato dd/mm/yyyy a un objeto Date
+  const convertirFecha = (fechaString) => {
+    const [dia, mes, anio] = fechaString.split("/").map(Number);
+    return new Date(anio, mes - 1, dia); // Meses en JavaScript son base 0
+  };
 
   // Función para buscar cliente por DNI
   const buscarClientePorDNI = async (dni) => {
@@ -29,27 +35,27 @@ function BuscarCliente() {
           pagos.push({ id: doc.id, ...doc.data() });
         });
 
-        pagos.sort((a, b) => new Date(b.fechaPago) - new Date(a.fechaPago));
+        pagos.sort(
+          (a, b) => convertirFecha(b.fechaPago) - convertirFecha(a.fechaPago) // Ordenar por fecha
+        );
 
         setCliente(clienteData);
         const ultimoPagoRealizado = pagos[0] || null;
         setUltimoPago(ultimoPagoRealizado);
 
-        // Verificar si hay deuda
         if (ultimoPagoRealizado) {
-          const fechaUltimoPago = new Date(
-            ultimoPagoRealizado.fechaPago.split("-").reverse().join("-")
-          ); // Convertir fecha al formato adecuado
+          const fechaUltimoPago = convertirFecha(ultimoPagoRealizado.fechaPago);
           const fechaActual = new Date();
-          fechaActual.setDate(1); // Solo comparamos el mes y año actual
+          fechaActual.setDate(1); // Normaliza al primer día del mes para evitar problemas
 
           if (fechaUltimoPago < fechaActual) {
             setTieneDeuda(true);
 
-            // Calcular meses de deuda
+            // Calcular la diferencia en meses
             const diferenciaMeses =
               (fechaActual.getFullYear() - fechaUltimoPago.getFullYear()) * 12 +
-              (fechaActual.getMonth() - fechaUltimoPago.getMonth());
+              fechaActual.getMonth() -
+              fechaUltimoPago.getMonth();
             setMesesDeuda(diferenciaMeses);
           } else {
             setTieneDeuda(false);
@@ -60,7 +66,6 @@ function BuscarCliente() {
           setMesesDeuda(new Date().getMonth() + 1); // Si no hay pagos registrados, deuda desde enero
         }
 
-        // Iniciar temporizador para limpiar después de 20 segundos
         if (timer) clearTimeout(timer);
         setTimer(setTimeout(() => limpiarPantalla(), 10000));
       } else {
