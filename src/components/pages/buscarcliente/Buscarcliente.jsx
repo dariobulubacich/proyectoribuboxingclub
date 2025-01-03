@@ -8,6 +8,7 @@ import {
   updateDoc,
   getDoc,
   addDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../../../firebase";
 import "./buscarcliente.css";
@@ -21,6 +22,47 @@ function BuscarCliente() {
   const [cantidadPagada, setCantidadPagada] = useState({});
   const [historialPagos, setHistorialPagos] = useState({});
   const [ultimoMesConPago, setUltimoMesConPago] = useState({});
+
+  const borrarPago = async (clienteId, pagoId) => {
+    try {
+      const pagoRef = doc(db, `clientes/${clienteId}/pagos/${pagoId}`);
+      await deleteDoc(pagoRef);
+
+      // Actualizar el historial en el estado
+      setHistorialPagos((prev) => ({
+        ...prev,
+        [clienteId]: prev[clienteId].filter((pago) => pago.id !== pagoId),
+      }));
+
+      Swal.fire({
+        position: "top-center",
+        icon: "success",
+        title: "Pago eliminado exitosamente.",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      console.error("Error al borrar el pago: ", error.message);
+      Swal.fire({
+        icon: "error",
+        title: "Error al eliminar el pago",
+        text: error.message,
+      });
+    }
+  };
+
+  // Función para calcular la fecha de vencimiento (1 mes después de la fecha de pago)
+  const calcularFechaVencimiento = (fechaPago) => {
+    if (!fechaPago) return "N/A";
+    const [dia, mes, anio] = fechaPago.split("/").map(Number);
+    const fecha = new Date(anio, mes - 1, dia);
+    fecha.setMonth(fecha.getMonth() + 1); // Agregar un mes
+    return fecha.toLocaleDateString("es-ES", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
 
   // Función para cargar apellidos únicos desde Firestore
   const cargarApellidos = async () => {
@@ -256,10 +298,13 @@ function BuscarCliente() {
                   <br />
                   DNI: {cliente.dni}
                   <br />
-                  Último Mes de Pago:{" "}
+                  Fecha de Pago:{" "}
                   {cliente.ultimoMesPago ? cliente.ultimoMesPago : "N/A"}
                   <br />
                   Última Fecha de Pago: {ultimoMesConPago[cliente.id] || "N/A"}
+                  <br />
+                  Fecha de Vencimiento:{" "}
+                  {calcularFechaVencimiento(cliente.ultimoMesPago)}
                   <br />
                   <button
                     className="button"
@@ -272,23 +317,29 @@ function BuscarCliente() {
                       {historialPagos[cliente.id].map((pago) => (
                         <li key={pago.id}>
                           Meses Pagados: {pago.mesesPagados}, Monto:{" "}
-                          {pago.cantidadPagada}, Fecha: {pago.fechaPago}
+                          {pago.cantidadPagada}, Fecha: {pago.fechaPago} -
+                          Vence: {calcularFechaVencimiento(pago.fechaPago)}
+                          <button
+                            className="button delete-button"
+                            onClick={() => borrarPago(cliente.id, pago.id)}
+                          >
+                            Borrar
+                          </button>
                         </li>
                       ))}
                     </ul>
                   )}
+                  {/* Inputs para registrar pagos */}
                   <div className="div inputs-var">
-                    {
-                      <input
-                        className="input-buscar-client"
-                        type="number"
-                        placeholder="Cuanto meses abona"
-                        value={mesesPagados[cliente.id] || ""}
-                        onChange={(e) =>
-                          handleMesesPagadosChange(cliente.id, e.target.value)
-                        }
-                      />
-                    }
+                    <input
+                      className="input-buscar-client"
+                      type="number"
+                      placeholder="Cuánto meses abona"
+                      value={mesesPagados[cliente.id] || ""}
+                      onChange={(e) =>
+                        handleMesesPagadosChange(cliente.id, e.target.value)
+                      }
+                    />
                     <input
                       className="input-buscar-client"
                       type="number"

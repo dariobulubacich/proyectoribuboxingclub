@@ -7,7 +7,6 @@ function BuscarCliente() {
   const [searchTerm, setSearchTerm] = useState("");
   const [cliente, setCliente] = useState(null);
   const [ultimoPago, setUltimoPago] = useState(null);
-  const [tieneDeuda, setTieneDeuda] = useState(false);
   const [mesesDeuda, setMesesDeuda] = useState(0);
   const [timer, setTimer] = useState(null);
 
@@ -45,25 +44,23 @@ function BuscarCliente() {
 
         if (ultimoPagoRealizado) {
           const fechaUltimoPago = convertirFecha(ultimoPagoRealizado.fechaPago);
-          const fechaActual = new Date();
-          fechaActual.setDate(1); // Normaliza al primer día del mes para evitar problemas
+          const fechaActual = new Date(); // Fecha actual para la comparación
 
-          if (fechaUltimoPago < fechaActual) {
-            setTieneDeuda(true);
+          // Calcular la diferencia en meses
+          const diferenciaMeses =
+            (fechaActual.getFullYear() - fechaUltimoPago.getFullYear()) * 12 +
+            fechaActual.getMonth() -
+            fechaUltimoPago.getMonth();
 
-            // Calcular la diferencia en meses
-            const diferenciaMeses =
-              (fechaActual.getFullYear() - fechaUltimoPago.getFullYear()) * 12 +
-              fechaActual.getMonth() -
-              fechaUltimoPago.getMonth();
-            setMesesDeuda(diferenciaMeses);
-          } else {
-            setTieneDeuda(false);
-            setMesesDeuda(0);
-          }
+          // Ajustar diferencia si el día actual es menor al del último pago
+          setMesesDeuda(
+            fechaActual.getDate() < fechaUltimoPago.getDate()
+              ? diferenciaMeses - 1
+              : diferenciaMeses
+          );
         } else {
-          setTieneDeuda(true);
-          setMesesDeuda(new Date().getMonth() + 1); // Si no hay pagos registrados, deuda desde enero
+          // Caso en el que no hay pagos registrados
+          setMesesDeuda(new Date().getMonth() + 1);
         }
 
         if (timer) clearTimeout(timer);
@@ -80,7 +77,6 @@ function BuscarCliente() {
   const limpiarPantalla = () => {
     setCliente(null);
     setUltimoPago(null);
-    setTieneDeuda(false);
     setMesesDeuda(0);
     setSearchTerm("");
   };
@@ -109,13 +105,13 @@ function BuscarCliente() {
       <div className="results-container">
         {cliente ? (
           <div className="client-info">
-            {tieneDeuda ? (
+            {mesesDeuda === 0 ? (
+              <p className="sin-deuda">✅ Este cliente está al día.</p>
+            ) : (
               <p className="deuda-alerta">
                 ⚠️ Este cliente tiene deuda de {mesesDeuda}{" "}
                 {mesesDeuda === 1 ? "mes" : "meses"}.
               </p>
-            ) : (
-              <p className="sin-deuda">✅ Este cliente está al día.</p>
             )}
             <strong>
               {cliente.nombre} {cliente.apellido}
